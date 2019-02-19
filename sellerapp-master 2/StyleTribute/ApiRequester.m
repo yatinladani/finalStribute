@@ -191,6 +191,7 @@ static NSString *const boundary = @"0Xvdfegrdf876fRD";
 }
 
 -(void)getAccountWithSuccess:(JSONRespAccount)success failure:(JSONRespError)failure {
+    
     if(![self checkInternetConnectionWithErrCallback:failure]) return;
     NSString *token = @"";
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Token"] == nil)
