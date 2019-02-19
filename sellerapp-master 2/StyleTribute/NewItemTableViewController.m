@@ -51,6 +51,7 @@ typedef void(^ImageLoadBlock)(int);
 @property Product *productCopy;
 @property Product *originalCopy;
 @property NSMutableArray* photosToDelete;
+@property NSInteger *productid;
 @property XCDFormInputAccessoryView* inputAccessoryView;
 @end
 
@@ -219,6 +220,7 @@ int sectionOffset = 0;
 //        [self dismissViewControllerAnimated:true completion:nil];
 //        return;
 //    }
+    self.productid = self.curProduct.identifier;
     [self saveProduct:self.curProduct];
 
 }
@@ -290,6 +292,7 @@ int sectionOffset = 0;
             
             if(self.curProduct.photos != nil)// && self.curProduct.category != nil)
             {
+                NSLog(@"%ld",self.curProduct.identifier);
                 __block Product *cur_product = self.curProduct;
                 //__block ImageLoadBlock *img_load_block = self.imgLoadBlock;
                 __block NSMutableArray *photos_to_delete = self.photosToDelete;
@@ -309,7 +312,7 @@ int sectionOffset = 0;
                         if(photo != nil && [photo isKindOfClass:[Photo class]] && imageType.state == ImageStateNew) {
                             dispatch_group_enter(group);
                             [progressView setTitleLabelText:[NSString stringWithFormat:@"Uploading image %d/%zd", i + 1, cur_product.photos.count]];
-                            [[ApiRequester sharedInstance] uploadImage:_imagedata ofType:imageType.type toProduct:self.originalCopy.identifier success:^{
+                            [[ApiRequester sharedInstance] uploadImage:photo.image ofType:imageType.type toProduct:self.productid success:^{
                                 imageType.state = ImageStateNormal;
                                 self.imgLoadBlock(i + 1);
                                 dispatch_group_leave(group);
@@ -377,7 +380,7 @@ int sectionOffset = 0;
                         if(photo != nil && photo.image != nil) {
                             [progressView setTitleLabelText:[NSString stringWithFormat:@"Uploading image %d/%zd", i + 1, cur_product.photos.count]];
                             dispatch_group_enter(group);
-                            [[ApiRequester sharedInstance] uploadImage:_imagedata ofType:@"custom" toProduct:cur_product.identifier success:^{
+                            [[ApiRequester sharedInstance] uploadImage:photo.image ofType:@"custom" toProduct:self.productid success:^{
                                 self.imgLoadBlock(i + 1);
                                 dispatch_group_leave(group);
                             } failure:^(NSString *error) {

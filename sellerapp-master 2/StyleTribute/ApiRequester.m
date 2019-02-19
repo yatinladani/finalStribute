@@ -828,28 +828,69 @@ static NSString *const boundary = @"0Xvdfegrdf876fRD";
       NSLog(@"%@",type);
      NSString* url = [NSString stringWithFormat:@"%@api/v1/products/%d/pictures", DefApiHost, productId];
     NSDictionary* params = @{@"label": @"hans",@"order":@"1",@"main":@"true"};
-     NSData *jsonBodyData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:nil];
-    NSProgress *p;
-    NSMutableURLRequest *request = [self.sessionManager.requestSerializer  multipartFormRequestWithMethod:@"POST" URLString:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileData:imageData name:@"files" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
-    } error:nil];
-     NSString *token = [@"Bearer " stringByAppendingString:[[NSUserDefaults standardUserDefaults] valueForKey:@"Token"]];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-     [request addValue:token forHTTPHeaderField:@"Authorization"];
-    [self.sessionManager setTaskDidSendBodyDataBlock:^(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-        progress(1.0*totalBytesSent/totalBytesExpectedToSend);
-    }];
-
-    NSURLSessionUploadTask* task = [self.sessionManager uploadTaskWithStreamedRequest:request progress:&p completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
-        if(error) {
-            [self logError:error withCaption:@"uploadImage error"];
-            failure(DefGeneralErrMsg);
-        } else {
-            success();
-        }
-    }];
-
-    [task resume];
+    @try
+    {
+        NSString *token = [@"Bearer " stringByAppendingString:[[NSUserDefaults standardUserDefaults] valueForKey:@"Token"]];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        NSDictionary *param = params;
+        AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+        [requestSerializer setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [requestSerializer setValue:token forHTTPHeaderField:@"Authorization"];
+        manager.requestSerializer=requestSerializer;
+        [manager.requestSerializer setTimeoutInterval:150];
+        [self.sessionManager setTaskDidSendBodyDataBlock:^(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+            progress(1.0*totalBytesSent/totalBytesExpectedToSend);
+        }];
+        [manager POST:url parameters:param constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
+         {
+             [formData appendPartWithFileData:imageData name:@"files" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+             
+         } success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             NSLog(@"response %@" , operation.responseString);
+             success();
+             
+         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+            failure(operation.responseString);
+         }];
+        
+        
+    }
+    @catch (NSException *exception)
+    {
+        NSLog(@"WebserviceDataProvider sendRequestToServerWithFile exception %@",exception);
+    }
+    @finally
+    {
+        
+    }
+    
+    
+    
+    
+//     NSData *jsonBodyData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:nil];
+//    NSProgress *p;
+//    NSMutableURLRequest *request = [self.sessionManager.requestSerializer  multipartFormRequestWithMethod:@"POST" URLString:url parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+//        [formData appendPartWithFileData:imageData name:@"files" fileName:@"photo.jpg" mimeType:@"image/jpeg"];
+//    } error:nil];
+//     NSString *token = [@"Bearer " stringByAppendingString:[[NSUserDefaults standardUserDefaults] valueForKey:@"Token"]];
+//    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//     [request addValue:token forHTTPHeaderField:@"Authorization"];
+//    [self.sessionManager setTaskDidSendBodyDataBlock:^(NSURLSession *session, NSURLSessionTask *task, int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+//        progress(1.0*totalBytesSent/totalBytesExpectedToSend);
+//    }];
+//
+//    NSURLSessionUploadTask* task = [self.sessionManager uploadTaskWithStreamedRequest:request progress:&p completionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+//        if(error) {
+//            [self logError:error withCaption:@"uploadImage error"];
+//            failure(DefGeneralErrMsg);
+//        } else {
+//            success();
+//        }
+//    }];
+//
+//    [task resume];
 }
 
 -(void)deleteImage:(NSUInteger)imageId fromProduct:(NSUInteger)productId success:(JSONRespEmpty)success failure:(JSONRespError)failure {
@@ -978,8 +1019,8 @@ static NSString *const boundary = @"0Xvdfegrdf876fRD";
 
 -(void)getPriceSuggestionForProduct:(Product*)product andOriginalPrice:(float)price success:(JSONRespPrice)success failure:(JSONRespError)failure {
     if(![self checkInternetConnectionWithErrCallback:failure]) return;
-//    NSDictionary* params = @{@"original_price": [NSString stringWithFormat:@"%f", price], @"category_id": [NSString stringWithFormat:@"%d", product.category.idNum], @"designer_id":[NSString stringWithFormat:@"%d", product.designer.identifier], @"condition_id":[NSString stringWithFormat:@"%d", product.condition.identifier]};
-      NSDictionary* params = @{@"original_price": [NSString stringWithFormat:@"%f", price], @"category_id": [NSString stringWithFormat:@"%d", 37], @"designer_id":[NSString stringWithFormat:@"%d", 27], @"condition_id":[NSString stringWithFormat:@"%d", 1]};
+    NSDictionary* params = @{@"original_price": [NSString stringWithFormat:@"%f", price], @"category_id": [NSString stringWithFormat:@"%ld", product.category.idNum], @"designer_id":[NSString stringWithFormat:@"%ld", product.designer.identifier], @"condition_id":[NSString stringWithFormat:@"%ld", product.condition.identifier]};
+//      NSDictionary* params = @{@"original_price": [NSString stringWithFormat:@"%f", price], @"category_id": [NSString stringWithFormat:@"%d", 37], @"designer_id":[NSString stringWithFormat:@"%d", 27], @"condition_id":[NSString stringWithFormat:@"%d", 1]};
     NSData *jsonBodyData = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:nil];
     NSString *token = [@"Bearer " stringByAppendingString:[[NSUserDefaults standardUserDefaults] valueForKey:@"Token"]];
     NSLog(@"%@",params);
