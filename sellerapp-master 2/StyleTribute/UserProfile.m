@@ -19,6 +19,7 @@
 }
 
 +(instancetype)parseFromJson:(NSDictionary*)dict {
+    
     NSDictionary *dicttemp = [[dict valueForKey:@"customer"] valueForKey:@"data"];
     UserProfile* profile = [UserProfile new];
     

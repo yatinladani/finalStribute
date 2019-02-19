@@ -13,6 +13,7 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [GlobalHelper addLogoToNavBar:self.navigationItem];
+    
     BankAccount* account = [DataCache sharedInstance].bankAccount;
 //    [MRProgressOverlayView showOverlayAddedTo:[UIApplication sharedApplication].keyWindow title:@"Loading..." mode:MRProgressOverlayViewModeIndeterminate animated:YES];
 //    [[ApiRequester sharedInstance] getBankAccount:^(BankAccount* account){

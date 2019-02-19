@@ -32,6 +32,7 @@
             NSLog(@"imgTypeArray: %@", imgTypeArray);
         }
     }
+    
     if(imgTypeArray != nil)
     {
         for(NSDictionary* imgTypeDict in imgTypeArray)

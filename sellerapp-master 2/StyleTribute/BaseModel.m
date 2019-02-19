@@ -79,6 +79,7 @@
 }
 
 +(long)parseLong:(NSString*)param fromDict:(NSDictionary*)dict {
+    
     if ([dict isKindOfClass:[NSDictionary class]])
     {
         NSNumber* val = [dict objectForKey:param];

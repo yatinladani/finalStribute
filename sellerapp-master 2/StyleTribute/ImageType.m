@@ -15,6 +15,7 @@
 @implementation ImageType
 
 +(instancetype)parseFromJson:(NSDictionary*)dict {
+    
     ImageType* imgType = [ImageType new];
     
     imgType.name = [[self class] parseString:@"name" fromDict:dict];

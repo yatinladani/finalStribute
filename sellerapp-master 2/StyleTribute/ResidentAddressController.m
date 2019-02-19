@@ -43,6 +43,7 @@
 
     Address* curShippingAddress = [DataCache sharedInstance].shippingAddress;
     if(curShippingAddress) {
+        
         self.firstNameField.text = curShippingAddress.firstName;
         self.lastNameField.text = curShippingAddress.lastName;
         self.companyField.text = curShippingAddress.company;

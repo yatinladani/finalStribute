@@ -12,6 +12,7 @@
 
 +(instancetype)parseFromJson:(NSDictionary*)dict {
     NSLog(@"%@",dict);
+    
     Address *item = [self new];
     
     item.firstName = [self parseString:@"first_name" fromDict:dict];

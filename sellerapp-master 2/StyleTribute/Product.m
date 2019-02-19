@@ -101,6 +101,7 @@ STCategory *pCategory = nil;
 
 +(instancetype)parseFromJson:(NSDictionary*)dict {
     NSLog(@"%@",dict);
+    
     Product* product = [Product new];
     NSDictionary *dicttemp = [[dict valueForKey:@"process_status"] valueForKey:@"data"];
     product.identifier = (NSUInteger)[self parseLong:@"id" fromDict:dict];

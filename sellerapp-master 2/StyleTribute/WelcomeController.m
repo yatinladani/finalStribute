@@ -63,6 +63,7 @@
                 [self showVertionAlert];
             } else {
                 [MRProgressOverlayView dismissOverlayForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                
                 [[ApiRequester sharedInstance] getAccountWithSuccess:^(UserProfile *profile) {
                     [MRProgressOverlayView dismissOverlayForView:[UIApplication sharedApplication].keyWindow animated:YES];
                    

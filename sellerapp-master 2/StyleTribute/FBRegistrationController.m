@@ -47,6 +47,7 @@
     if(profile.firstName.length > 0) self.firstNameField.text = profile.firstName;
     if(profile.lastName.length > 0) self.lastNameField.text = profile.lastName;
     if(profile.country.length > 0) self.countryField.text = profile.country;
+    
    // if(profile.phone.length > 0) self.phoneField.text = profile.phone;
 
     if(self.updatingProfile) {

@@ -41,6 +41,7 @@
                 [MRProgressOverlayView dismissOverlayForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 [[ApiRequester sharedInstance] getAccountWithSuccess:^(UserProfile *profile){
                     //[DataCache sharedInstance].userProfile = profile;
+                    
                     if([profile isFilled]) {
                         [self performSegueWithIdentifier:@"mainScreenSegue" sender:self];
                     } else {

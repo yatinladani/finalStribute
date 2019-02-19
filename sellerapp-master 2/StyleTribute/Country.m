@@ -11,6 +11,7 @@
 @implementation Country
 
 +(instancetype)parseFromJson:(NSDictionary*)dict; {
+    
     Country* country = [Country new];
     country.identifier = [[self class] parseString:@"alpha2Code" fromDict:dict];
     country.name = [[self class] parseString:@"name" fromDict:dict];

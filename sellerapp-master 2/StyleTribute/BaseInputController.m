@@ -30,6 +30,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     self.widthConstraint.constant = [[UIScreen mainScreen] bounds].size.width;
 }

@@ -12,6 +12,7 @@
 
 +(instancetype)parseFromJson:(NSDictionary*)dict {
     NSLog(@"%@",dict);
+    
     BankAccount* account = [BankAccount new];
     
     account.accountNumber = [[self class] parseString:@"bank_account" fromDict:dict];
